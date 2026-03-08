@@ -40,7 +40,7 @@ function Input({ label, type = 'text', value, onChange, placeholder }) {
   )
 }
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter()
   const search = useSearchParams()
 
@@ -168,5 +168,14 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+import { Suspense } from 'react'
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Loading…</div>}>
+      <LoginForm />
+    </Suspense>
   )
 }
