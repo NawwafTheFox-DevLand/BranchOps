@@ -4,19 +4,20 @@ import { useMemo, useState } from 'react'
 
 const C = {
   bg:'#f4f6f9', surf:'#ffffff', surf2:'#f0f2f6', surf3:'#e8ebf0',
+  surface:'#ffffff', surface2:'#f0f2f6', surface3:'#e8ebf0',
   border:'#dde1e9', border2:'#c8cdd8',
   amber:'#d97706', amberDim:'rgba(217,119,6,0.08)', amberBrd:'rgba(217,119,6,0.25)',
   green:'#16a34a', greenDim:'rgba(22,163,74,0.07)', greenBrd:'rgba(22,163,74,0.2)',
   red:'#dc2626',   redDim:'rgba(220,38,38,0.07)',   redBrd:'rgba(220,38,38,0.2)',
   blue:'#2563eb',  blueDim:'rgba(37,99,235,0.07)',  blueBrd:'rgba(37,99,235,0.2)',
-  teal:'#0d9488',  violet:'#7c3aed',
+  teal:'#0d9488',  violet:'#7c3aed', purple:'#7c3aed',
   muted:'#94a3b8', muted2:'#64748b', text:'#111827', textDim:'#374151',
 }
 
 const ROLE_META = {
-  super_admin:  { label: 'Super Admin',     color: C.purple, desc: 'Full system access' },
-  admin:        { label: 'Admin',           color: C.amber,  desc: 'Business owner or branch manager' },
-  branch_user:  { label: 'Branch Employee', color: C.teal,   desc: 'Log access only' },
+  super_admin:  { label: 'Super Admin',     color: C.purple,  desc: 'Full system access' },
+  admin:        { label: 'Admin',           color: C.amber,   desc: 'Business owner or branch manager' },
+  branch_user:  { label: 'Branch Employee', color: C.teal,    desc: 'Log access only' },
 }
 
 const ADMIN_TYPE_META = {
@@ -44,13 +45,13 @@ function RoleBadge({ role, admin_type }) {
 }
 
 export default function UsersClient({ initial, currentUserRole }) {
-  const [rows, setRows]       = useState(initial.profiles || [])
-  const [q, setQ]             = useState('')
+  const [rows, setRows]         = useState(initial.profiles || [])
+  const [q, setQ]               = useState('')
   const [savingId, setSavingId] = useState(null)
-  const [toast, setToast]     = useState(null)
+  const [toast, setToast]       = useState(null)
 
-  const branches    = initial.branches || []
-  const branchById  = useMemo(() => new Map(branches.map(b => [b.id, b])), [branches])
+  const branches   = initial.branches || []
+  const branchById = useMemo(() => new Map(branches.map(b => [b.id, b])), [branches])
 
   const filtered = useMemo(() => {
     const s = q.trim().toLowerCase()
@@ -101,7 +102,6 @@ export default function UsersClient({ initial, currentUserRole }) {
     <div style={{ fontFamily: "'Inter','Segoe UI',system-ui,sans-serif" }}>
       <style>{`*{box-sizing:border-box} select option{background:#ffffff}`}</style>
 
-      {/* Stats row */}
       <div style={{ display: 'flex', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
         {Object.entries(ROLE_META).map(([role, meta]) => (
           <div key={role} style={{ background: C.surface, border: `1px solid ${C.border}`,
@@ -121,10 +121,7 @@ export default function UsersClient({ initial, currentUserRole }) {
         </div>
       </div>
 
-      {/* Table */}
       <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 14, overflow: 'hidden' }}>
-
-        {/* Toolbar */}
         <div style={{ padding: '12px 16px', borderBottom: `1px solid ${C.border}`,
           display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
           <input value={q} onChange={e => setQ(e.target.value)}
@@ -158,7 +155,7 @@ export default function UsersClient({ initial, currentUserRole }) {
             </thead>
             <tbody>
               {filtered.map(r => {
-                const branch = r.branch_id ? branchById.get(r.branch_id) : null
+                const branch  = r.branch_id ? branchById.get(r.branch_id) : null
                 const canEdit = currentUserRole === 'super_admin' ||
                   (currentUserRole === 'admin' && r.role === 'branch_user')
 
@@ -166,7 +163,6 @@ export default function UsersClient({ initial, currentUserRole }) {
                   <tr key={r.id} style={{ borderBottom: `1px solid ${C.border}`,
                     opacity: r.is_active === false ? 0.5 : 1 }}>
 
-                    {/* Name */}
                     <td style={{ padding: '10px 12px' }}>
                       <input value={r.full_name || ''} disabled={!canEdit}
                         onChange={e => setRow(r.id, { full_name: e.target.value })}
@@ -176,12 +172,10 @@ export default function UsersClient({ initial, currentUserRole }) {
                           color: C.text, fontSize: 12, fontFamily: 'inherit', outline: 'none' }} />
                     </td>
 
-                    {/* Email */}
                     <td style={{ padding: '10px 12px', color: C.muted2, whiteSpace: 'nowrap', fontSize: 11 }}>
-                      {r.email || '—'}
+                      {r.email || 'No email on record'}
                     </td>
 
-                    {/* Role */}
                     <td style={{ padding: '10px 12px' }}>
                       {canEdit ? (
                         <select value={r.role} onChange={e => setRow(r.id, { role: e.target.value, admin_type: null })}
@@ -197,7 +191,6 @@ export default function UsersClient({ initial, currentUserRole }) {
                       )}
                     </td>
 
-                    {/* Admin Type — only shown when role = admin */}
                     <td style={{ padding: '10px 12px' }}>
                       {r.role === 'admin' && canEdit ? (
                         <select value={r.admin_type || 'business_owner'}
@@ -210,14 +203,15 @@ export default function UsersClient({ initial, currentUserRole }) {
                         </select>
                       ) : r.role === 'admin' ? (
                         <span style={{ color: C.amber, fontSize: 11 }}>
-                          {ADMIN_TYPE_META[r.admin_type]?.label || '—'}
+                          {ADMIN_TYPE_META[r.admin_type]?.label || 'Not set'}
                         </span>
+                      ) : r.role === 'super_admin' ? (
+                        <span style={{ color: C.muted, fontSize: 11 }}>Full access</span>
                       ) : (
-                        <span style={{ color: C.muted }}>—</span>
+                        <span style={{ color: C.muted, fontSize: 11 }}>Not applicable</span>
                       )}
                     </td>
 
-                    {/* Branch */}
                     <td style={{ padding: '10px 12px' }}>
                       {canEdit ? (
                         <select value={r.branch_id || ''}
@@ -225,19 +219,18 @@ export default function UsersClient({ initial, currentUserRole }) {
                           style={{ padding: '7px 9px', borderRadius: 7, border: `1px solid ${C.border2}`,
                             background: C.surface2, color: C.text, fontSize: 12,
                             fontFamily: 'inherit', cursor: 'pointer', outline: 'none' }}>
-                          <option value="">— unassigned —</option>
+                          <option value="">No branch assigned</option>
                           {branches.map(b => (
                             <option key={b.id} value={b.id}>{b.code} — {b.name}</option>
                           ))}
                         </select>
                       ) : (
                         <span style={{ color: C.muted2, fontSize: 11 }}>
-                          {branch ? `${branch.code} — ${branch.name}` : '—'}
+                          {branch ? `${branch.code} — ${branch.name}` : 'No branch assigned'}
                         </span>
                       )}
                     </td>
 
-                    {/* Active toggle */}
                     <td style={{ padding: '10px 12px' }}>
                       {canEdit ? (
                         <button onClick={() => setRow(r.id, { is_active: !r.is_active })}
@@ -254,7 +247,6 @@ export default function UsersClient({ initial, currentUserRole }) {
                       )}
                     </td>
 
-                    {/* Save */}
                     <td style={{ padding: '10px 12px' }}>
                       {canEdit ? (
                         <button onClick={() => save(r)} disabled={savingId === r.id}
@@ -266,7 +258,7 @@ export default function UsersClient({ initial, currentUserRole }) {
                           {savingId === r.id ? '…' : 'Save'}
                         </button>
                       ) : (
-                        <span style={{ color: C.muted, fontSize: 10 }}>view only</span>
+                        <span style={{ color: C.muted, fontSize: 10 }}>View only</span>
                       )}
                     </td>
                   </tr>
@@ -285,7 +277,7 @@ export default function UsersClient({ initial, currentUserRole }) {
         <div style={{ padding: '12px 16px', borderTop: `1px solid ${C.border}`,
           fontSize: 11, color: C.muted2, lineHeight: 1.8 }}>
           <b style={{ color: C.textDim }}>Role rules:</b> Super Admin can edit anyone ·
-          Admin can only promote/demote Branch Employees ·
+          Admin can only manage Branch Employees ·
           Branch Manager requires a branch assignment ·
           Inactive users are redirected to login
         </div>
