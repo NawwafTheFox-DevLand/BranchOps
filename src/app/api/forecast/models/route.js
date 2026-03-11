@@ -11,8 +11,8 @@ export async function GET(req) {
 
     const { data: models } = await supabase.from('forecast_models')
       .select(`id, model_type, is_active, mape, mae, rmse, aic,
-               selected_vars, var_aic_scores, trained_on_weeks,
-               training_start, training_end, trained_at, notes,
+               selected_vars, var_aic_scores, model_params,
+               trained_on_weeks, training_start, training_end, trained_at, notes,
                products(id, name_ar, erp_code),
                branches(id, code, name)`)
       .eq('is_active', true)

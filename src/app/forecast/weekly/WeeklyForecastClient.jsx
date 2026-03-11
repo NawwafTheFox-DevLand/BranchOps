@@ -13,10 +13,12 @@ const C = {
 }
 
 const MODEL_META = {
-  prophet:       { label:'Prophet',       color:C.amber,  desc:'Facebook/Meta · Saudi holidays + Ramadan · Regressor selection by MAPE' },
-  sarimax:       { label:'SARIMAX',       color:C.blue,   desc:'Statistical · AIC forward stepwise variable selection · Seasonal ARIMA' },
-  holt_winters:  { label:'Holt-Winters',  color:C.teal,   desc:'ETS · Triple exponential smoothing · Best for short series' },
-  ensemble:      { label:'Ensemble',      color:C.purple, desc:'Weighted average of all models by inverse MAPE' },
+  wma:          { label:'WMA',          color:C.teal,   desc:'Optimized WMA · Auto-tuned decay λ via grid-search CV · Conformal CI · Best cold-start model (≥4w)' },
+  holt_winters: { label:'Holt-Winters', color:C.blue,   desc:'ETS · Auto-selects trend/damped/no-trend by AIC · Walk-forward CV · Conformal CI (≥8w)' },
+  theta:        { label:'Theta',        color:C.violet, desc:'Theta method · Linear trend + SES variation · Robust for noisy series · Equivalent to SES+drift (≥8w)' },
+  lgbm:         { label:'LightGBM',     color:C.green,  desc:'Gradient boosting · Lag features (1,2,4,8w) + Saudi calendar · L1+L2 regularization · Walk-forward CV (≥26w)' },
+  sarimax:      { label:'SARIMAX',      color:C.amber,  desc:'Seasonal ARIMA · AIC forward stepwise variable selection · Tests: is_ramadan, week_sin/cos, is_eid, is_summer (≥52w)' },
+  ensemble:     { label:'Ensemble',     color:C.red,    desc:'Inverse-MAPE weighted average of all trained models · Lower MAPE → higher weight · Most robust' },
 }
 
 const fmt  = n => n == null ? '—' : Math.round(Number(n)).toLocaleString()
@@ -149,10 +151,10 @@ export default function WeeklyForecastClient({ branches, products }) {
         <div style={{ marginBottom:24 }}>
           <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:6, flexWrap:'wrap' }}>
             <div style={{ fontFamily:"'Syne',sans-serif", fontWeight:900, fontSize:22, letterSpacing:'-0.03em' }}>Weekly Demand Forecast</div>
-            <Badge label="Prophet · SARIMAX · Holt-Winters" color={C.amber}/>
+            <Badge label="v4.0 · WMA · HW · Theta · LightGBM · SARIMAX · Ensemble" color={C.amber}/>
           </div>
           <div style={{ fontSize:11, color:C.muted2, lineHeight:1.9 }}>
-            Models trained externally via Python · Variable selection by AIC &amp; hold-out MAPE · 8-week horizon · 80% confidence intervals
+            Trained via train_forecast.py · 5-fold walk-forward CV · AIC variable selection · Conformal prediction intervals · 8-week horizon · 1.15× safety factor
           </div>
         </div>
 
@@ -218,12 +220,16 @@ export default function WeeklyForecastClient({ branches, products }) {
               evaluates them on a 4-week hold-out, picks the best per product, and stores
               8 weeks of forecasts + batch recommendations here.
             </div>
-            <div style={{ marginTop:20, padding:'14px 18px', background:C.surf2, borderRadius:10, textAlign:'left', maxWidth:520, margin:'20px auto 0', fontSize:11, color:C.muted2, lineHeight:1.9 }}>
+            <div style={{ marginTop:20, padding:'14px 18px', background:C.surf2, borderRadius:10, textAlign:'left', maxWidth:560, margin:'20px auto 0', fontSize:11, color:C.muted2, lineHeight:1.9 }}>
               <div style={{ fontWeight:700, color:C.text, marginBottom:8 }}>Setup (one time):</div>
-              <div><span style={{ color:C.amber }}>1.</span> pip install prophet statsmodels pmdarima pandas supabase</div>
-              <div><span style={{ color:C.amber }}>2.</span> python train_forecast.py</div>
+              <div><span style={{ color:C.amber }}>1.</span> pip install pandas openpyxl numpy statsmodels pmdarima lightgbm supabase</div>
+              <div><span style={{ color:C.amber }}>2.</span> python3 train_forecast.py --source excel \</div>
+              <div style={{ paddingLeft:16 }}>--sales تاريخ_المخزون_2yr.xlsx \</div>
+              <div style={{ paddingLeft:16 }}>--models wma,holt_winters,theta,lgbm,ensemble</div>
               <div><span style={{ color:C.amber }}>3.</span> Refresh this page</div>
-              <div style={{ marginTop:8, color:C.muted, fontSize:10 }}>Re-run weekly or set up a cron job for automatic retraining.</div>
+              <div style={{ marginTop:8, color:C.muted, fontSize:10 }}>
+                v4.0: Optimized-λ WMA · Holt-Winters · Theta · LightGBM (L1+L2) · SARIMAX · Ensemble · 5-fold walk-forward CV · Conformal CI
+              </div>
             </div>
           </div>
         )}
@@ -235,7 +241,7 @@ export default function WeeklyForecastClient({ branches, products }) {
               const sorted  = [...weeks].sort((a, b) => a.week_start.localeCompare(b.week_start))
               const mapeVal = modelByProduct[pid]?.[0]?.mape
               const modelType = sorted[0]?.model_type
-              const mm = MODEL_META[modelType] || MODEL_META.prophet
+              const mm = MODEL_META[modelType] || MODEL_META.wma
               const sparkVals = sorted.map(w => w.predicted_units)
               const maxUnits  = Math.max(...sorted.map(w => w.predicted_hi80 || w.predicted_units || 0), 1)
 
@@ -326,7 +332,7 @@ export default function WeeklyForecastClient({ branches, products }) {
           <div className="fu">
             {Object.entries(byProduct).map(([pid, { product, weeks }]) => {
               const sorted = [...weeks].sort((a,b) => a.week_start.localeCompare(b.week_start))
-              const mm = MODEL_META[sorted[0]?.model_type] || MODEL_META.prophet
+              const mm = MODEL_META[sorted[0]?.model_type] || MODEL_META.wma
               const W=900, H=220, PAD={t:20,r:20,b:40,l:55}
               const iW=W-PAD.l-PAD.r, iH=H-PAD.t-PAD.b
               const allVals = sorted.flatMap(w => [w.predicted_units, w.predicted_hi80, w.actual_units].filter(Boolean))
@@ -396,34 +402,27 @@ export default function WeeklyForecastClient({ branches, products }) {
         {/* ══ MODEL DETAILS ══ */}
         {activeTab === 'models' && !loading && (
           <div className="fu">
-            {/* Methodology cards */}
+            {/* Methodology cards — v4.0 */}
             <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:10, marginBottom:24 }}>
-              {Object.entries(MODEL_META).filter(([k]) => k !== 'ensemble').map(([key, mm]) => (
-                <div key={key} style={{ background:C.surf, border:`1px solid ${C.border}`, borderRadius:12, padding:'16px 18px' }}>
-                  <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:8 }}>
-                    <Badge label={mm.label} color={mm.color}/>
+              {[
+                { key:'wma', extra: <>Min weeks: <b>4</b> · λ grid-searched ∈ [0.50–0.99] · Flat forecast with conformal CI</> },
+                { key:'holt_winters', extra: <>Min weeks: <b>8</b> · Auto-selects trend / damped / no-trend by AIC · Conformal CI</> },
+                { key:'theta', extra: <>Min weeks: <b>8</b> · θ=0 linear trend + θ=2 SES · Robust for noisy series</> },
+                { key:'lgbm', extra: <>Min weeks: <b>26</b> · Lags: 1,2,4,8w · Calendar: Ramadan, Eid, salary-week, school · L1=0.1 L2=1.0</> },
+                { key:'sarimax', extra: <>Min weeks: <b>52</b> · Variables tested: <span style={{ color:C.teal }}>is_ramadan · week_sin/cos · is_eid · is_summer · is_holiday</span> · ΔAIC threshold: −2</> },
+                { key:'ensemble', extra: <>Weights = 1/MAPE (normalised) · Needs ≥ 2 models · Lowest variance across all approaches</> },
+              ].map(({ key, extra }) => {
+                const mm = MODEL_META[key]
+                return (
+                  <div key={key} style={{ background:C.surf, border:`1px solid ${C.border}`, borderRadius:12, padding:'16px 18px' }}>
+                    <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:8 }}>
+                      <Badge label={mm.label} color={mm.color}/>
+                    </div>
+                    <div style={{ fontSize:11, color:C.muted2, lineHeight:1.8, marginBottom:8 }}>{mm.desc.split('·').slice(1).join('·').trim() || mm.desc}</div>
+                    <div style={{ fontSize:10, color:C.textDim, lineHeight:1.8, borderTop:`1px solid ${C.border}`, paddingTop:8 }}>{extra}</div>
                   </div>
-                  <div style={{ fontSize:11, color:C.muted2, lineHeight:1.8 }}>{mm.desc}</div>
-                  {key === 'sarimax' && (
-                    <div style={{ marginTop:10, fontSize:10, color:C.textDim, lineHeight:1.8, borderTop:`1px solid ${C.border}`, paddingTop:8 }}>
-                      Variables tested: <span style={{ color:C.teal }}>is_ramadan · week_sin/cos · is_q4 · is_summer</span><br/>
-                      Selected by: AIC forward stepwise (threshold ΔAIC ≤ −2)
-                    </div>
-                  )}
-                  {key === 'prophet' && (
-                    <div style={{ marginTop:10, fontSize:10, color:C.textDim, lineHeight:1.8, borderTop:`1px solid ${C.border}`, paddingTop:8 }}>
-                      Holidays: National Day · Founding Day · Eid Al-Fitr · Eid Al-Adha<br/>
-                      Regressors selected by MAPE improvement ≥ 0.5%
-                    </div>
-                  )}
-                  {key === 'holt_winters' && (
-                    <div style={{ marginTop:10, fontSize:10, color:C.textDim, lineHeight:1.8, borderTop:`1px solid ${C.border}`, paddingTop:8 }}>
-                      Used when: fewer than 8 weeks of data<br/>
-                      Auto-selects: additive / damped / no-trend
-                    </div>
-                  )}
-                </div>
-              ))}
+                )
+              })}
             </div>
 
             {/* Per-product model results */}
@@ -434,34 +433,63 @@ export default function WeeklyForecastClient({ branches, products }) {
             ) : (
               <div style={{ background:C.surf, border:`1px solid ${C.border}`, borderRadius:14, overflow:'hidden' }}>
                 <div style={{ padding:'12px 18px', borderBottom:`1px solid ${C.border}`, background:C.surf2, fontFamily:"'Syne',sans-serif", fontWeight:800, fontSize:13 }}>
-                  Active Models — Variable Selection Results
+                  Active Models — v4.0 Walk-Forward CV Results
                 </div>
                 <div style={{ overflowX:'auto' }}>
                   <table style={{ width:'100%', borderCollapse:'collapse', fontSize:11 }}>
                     <thead>
                       <tr style={{ borderBottom:`1px solid ${C.border}`, background:C.surf3 }}>
-                        {['Product','Branch','Model','MAPE','MAE','AIC','Selected Variables','Trained'].map(h => (
+                        {['Product','Branch','Model','CV MAPE','MAE','AIC / λ','Model Details','Trained'].map(h => (
                           <th key={h} style={{ padding:'8px 12px', textAlign:'left', fontSize:9, color:C.muted2, fontWeight:600, letterSpacing:'0.07em', textTransform:'uppercase', whiteSpace:'nowrap' }}>{h}</th>
                         ))}
                       </tr>
                     </thead>
                     <tbody>
                       {models.map((m, i) => {
-                        const mm = MODEL_META[m.model_type] || MODEL_META.prophet
+                        const mm = MODEL_META[m.model_type] || MODEL_META.wma
                         const vars = typeof m.selected_vars === 'string' ? JSON.parse(m.selected_vars || '[]') : (m.selected_vars || [])
                         const aicScores = typeof m.var_aic_scores === 'string' ? JSON.parse(m.var_aic_scores || '{}') : (m.var_aic_scores || {})
+                        const mp = typeof m.model_params === 'string' ? (() => { try { return JSON.parse(m.model_params) } catch { return {} } })() : (m.model_params || {})
+                        const cvMape = mp.cv_mape ?? m.mape
+
+                        // Model-specific detail cell
+                        let detailCell = null
+                        if (m.model_type === 'wma') {
+                          detailCell = mp.lambda != null ? <span style={{ color:C.teal }}>λ={Number(mp.lambda).toFixed(3)}</span> : null
+                        } else if (m.model_type === 'holt_winters') {
+                          detailCell = <span style={{ color:C.muted2 }}>trend={mp.trend||'add'} damped={mp.damped?'✓':'✗'}</span>
+                        } else if (m.model_type === 'theta') {
+                          detailCell = mp.alpha != null ? <span style={{ color:C.violet }}>SES α={Number(mp.alpha).toFixed(2)} slope={Number(mp.slope||0).toFixed(2)}</span> : null
+                        } else if (m.model_type === 'lgbm') {
+                          const features = mp.top_features || []
+                          detailCell = features.length > 0 ? (
+                            <span>{features.slice(0,3).map(f => <VarChip key={f} name={f}/>)}</span>
+                          ) : null
+                        } else if (m.model_type === 'sarimax') {
+                          detailCell = vars.length > 0 ? vars.map(v => (
+                            <VarChip key={v} name={v} delta={aicScores[v]}/>
+                          )) : <span style={{ color:C.muted, fontSize:9 }}>no vars selected</span>
+                        } else if (m.model_type === 'ensemble') {
+                          const weights = mp.weights || {}
+                          detailCell = Object.entries(weights).map(([k,w]) => (
+                            <VarChip key={k} name={`${k}=${(w*100).toFixed(0)}%`}/>
+                          ))
+                        }
+
+                        const aicOrLambda = m.model_type === 'wma' ? (mp.lambda != null ? `λ ${Number(mp.lambda).toFixed(3)}` : '—')
+                          : m.model_type === 'lgbm' ? `L1=${mp.lambda_l1??'—'} L2=${mp.lambda_l2??'—'}`
+                          : m.aic ? Math.round(m.aic) : '—'
+
                         return (
                           <tr key={i} className="rh" style={{ borderBottom:`1px solid ${C.border}` }}>
                             <td style={{ padding:'9px 12px', fontWeight:700 }}>{m.products?.name_ar}</td>
                             <td style={{ padding:'9px 12px', color:C.muted2 }}>{m.branches?.code}</td>
                             <td style={{ padding:'9px 12px' }}><Badge label={mm.label} color={mm.color} small/></td>
-                            <td style={{ padding:'9px 12px' }}><MAPEBadge mape={m.mape}/></td>
+                            <td style={{ padding:'9px 12px' }}><MAPEBadge mape={cvMape}/></td>
                             <td style={{ padding:'9px 12px', color:C.textDim }}>{fmt1(m.mae)}</td>
-                            <td style={{ padding:'9px 12px', color:C.textDim }}>{m.aic ? Math.round(m.aic) : '—'}</td>
-                            <td style={{ padding:'9px 12px', maxWidth:260 }}>
-                              {vars.length > 0 ? vars.map(v => (
-                                <VarChip key={v} name={v} delta={aicScores[v]}/>
-                              )) : <span style={{ color:C.muted, fontSize:9 }}>none selected</span>}
+                            <td style={{ padding:'9px 12px', color:C.muted2, fontSize:10 }}>{aicOrLambda}</td>
+                            <td style={{ padding:'9px 12px', maxWidth:280 }}>
+                              {detailCell || <span style={{ color:C.muted, fontSize:9 }}>—</span>}
                             </td>
                             <td style={{ padding:'9px 12px', color:C.muted2, fontSize:10 }}>
                               {m.trained_at ? new Date(m.trained_at).toLocaleDateString() : '—'}
