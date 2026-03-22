@@ -222,13 +222,13 @@ export default function AnalyticsClient({ initial }) {
             width: 250,
             padding: '8px 10px',
             borderRadius: 10,
-            background: 'rgba(13,15,18,0.95)',
-            border: `1px solid ${C.border2}`,
-            color: C.text,
+            background: C.surf,
+            border: `1px solid ${C.border}`,
+            color: C.textDim,
             fontSize: 11,
             zIndex: 9999,
             pointerEvents: 'none',
-            boxShadow: '0 10px 30px rgba(0,0,0,0.35)',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.10)',
           }}
         >
           {tip.text}

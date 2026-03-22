@@ -371,7 +371,7 @@ export default function ChartsClient() {
     <div style={{ minHeight:'100vh', background:C.bg, fontFamily:"'Inter','Segoe UI',system-ui,sans-serif", color:C.text, paddingBottom:60 }}>
       <style>{`
         *{box-sizing:border-box;margin:0;padding:0}
-        select,input{font-family:inherit;color:#e2e2e2}
+        select,input{font-family:inherit;color:#111827}
         @keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
         .fu{animation:fu .3s ease both}
         @keyframes spin{to{transform:rotate(360deg)}}
