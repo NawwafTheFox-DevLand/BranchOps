@@ -143,7 +143,7 @@ export default function WeeklyForecastClient({ branches, products }) {
 
   return (
     <div style={{ minHeight:'100vh', background:C.bg, fontFamily:"'Inter','Segoe UI',system-ui,sans-serif", color:C.text, padding:'28px 24px 80px' }}>
-      <style>{`*{box-sizing:border-box;margin:0;padding:0}@keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}.fu{animation:fu .2s ease both}::-webkit-scrollbar{width:3px;height:3px}::-webkit-scrollbar-thumb{background:#252d35;border-radius:2px}.rh:hover{background:rgba(255,255,255,0.02)!important}select option{background:#ffffff}`}</style>
+      <style>{`*{box-sizing:border-box;margin:0;padding:0}@keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}.fu{animation:fu .2s ease both}::-webkit-scrollbar{width:3px;height:3px}::-webkit-scrollbar-thumb{background:#c8cdd8;border-radius:2px}.rh:hover{background:rgba(0,0,0,0.025)!important}select option{background:#ffffff;color:#111827}`}</style>
 
       <div style={{ maxWidth:1100, margin:'0 auto' }}>
 

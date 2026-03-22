@@ -219,14 +219,14 @@ export default function TrainingClient({ products, recentRuns, accuracyRows, bat
     <div style={{ minHeight:'100vh', background:C.bg, fontFamily:"'Inter','Segoe UI',system-ui,sans-serif", color:C.text }} dir={lang==='ar'?'rtl':'ltr'}>
       <style>{`
         *{box-sizing:border-box;margin:0;padding:0}
-        select,input[type=range]{font-family:inherit;color:#e5e7eb;cursor:pointer}
+        select,input[type=range]{font-family:inherit;color:#111827;cursor:pointer}
         input[type=range]{accent-color:#f59e0b;width:100%}
         .rh:hover{background:rgba(245,158,11,0.04)!important}
         @keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
         .fu{animation:fu .3s ease both}
         @keyframes spin{to{transform:rotate(360deg)}}
         .spin{animation:spin .8s linear infinite;display:inline-block}
-        ::-webkit-scrollbar{width:3px;height:3px}::-webkit-scrollbar-thumb{background:#252d35;border-radius:2px}
+        ::-webkit-scrollbar{width:3px;height:3px}::-webkit-scrollbar-thumb{background:#c8cdd8;border-radius:2px}
       `}</style>
 
       {/* Header */}

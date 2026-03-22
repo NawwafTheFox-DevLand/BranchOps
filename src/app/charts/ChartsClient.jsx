@@ -377,7 +377,8 @@ export default function ChartsClient() {
         @keyframes spin{to{transform:rotate(360deg)}}
         .spin{animation:spin .9s linear infinite;display:inline-block}
         ::-webkit-scrollbar{width:3px;height:3px}
-        ::-webkit-scrollbar-thumb{background:#252a31;border-radius:2px}
+        ::-webkit-scrollbar-thumb{background:#c8cdd8;border-radius:2px}
+        select option{background:#ffffff;color:#111827}
       `}</style>
 
       {/* Header */}

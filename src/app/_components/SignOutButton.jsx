@@ -24,14 +24,16 @@ export default function SignOutButton({ label = 'Sign out' }) {
       onClick={onSignOut}
       disabled={loading}
       style={{
-        background: 'none',
-        border: '1px solid rgba(255,255,255,0.12)',
-        color: 'rgba(229,231,235,0.9)',
+        background: '#f0f2f6',
+        border: '1px solid #c8cdd8',
+        color: '#374151',
         padding: '8px 10px',
         borderRadius: 10,
         cursor: loading ? 'not-allowed' : 'pointer',
         fontSize: 12,
         fontWeight: 700,
+        fontFamily: 'inherit',
+        opacity: loading ? 0.6 : 1,
       }}
     >
       {loading ? '…' : label}

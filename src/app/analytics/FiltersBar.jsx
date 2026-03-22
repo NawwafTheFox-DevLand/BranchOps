@@ -4,13 +4,16 @@ import { useMemo, useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
 const C = {
-  surf: '#0d0f12',
-  surf2: '#131618',
-  border: '#1e2328',
-  border2: '#252d35',
-  amber: '#f59e0b',
-  text: '#e5e7eb',
-  muted2: '#6b7280',
+  surf:   '#ffffff',
+  surf2:  '#f0f2f6',
+  surf3:  '#e8ebf0',
+  border: '#dde1e9',
+  border2:'#c8cdd8',
+  amber:  '#d97706',
+  amberDim: 'rgba(217,119,6,0.08)',
+  text:   '#111827',
+  textDim:'#374151',
+  muted2: '#64748b',
 }
 
 function TT(lang, ar, en) {
@@ -78,6 +81,7 @@ export default function FiltersBar({ lang = 'ar', filters, classOptions }) {
     fontSize: 11,
     outline: 'none',
     fontFamily: 'inherit',
+    cursor: 'pointer',
   }
 
   const labelStyle = {
@@ -96,6 +100,7 @@ export default function FiltersBar({ lang = 'ar', filters, classOptions }) {
         borderRadius: 14,
         padding: '14px 16px',
         marginBottom: 16,
+        boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 10 }}>
@@ -111,12 +116,13 @@ export default function FiltersBar({ lang = 'ar', filters, classOptions }) {
             style={{
               padding: '7px 10px',
               borderRadius: 10,
-              border: `1px solid ${C.border2}`,
-              background: 'rgba(245,158,11,0.10)',
+              border: `1px solid rgba(217,119,6,0.3)`,
+              background: C.amberDim,
               color: C.amber,
               fontWeight: 800,
               fontSize: 11,
               cursor: 'pointer',
+              fontFamily: 'inherit',
             }}
           >
             {TT(lang, 'تطبيق', 'Apply')}
@@ -127,11 +133,12 @@ export default function FiltersBar({ lang = 'ar', filters, classOptions }) {
               padding: '7px 10px',
               borderRadius: 10,
               border: `1px solid ${C.border2}`,
-              background: C.surf2,
-              color: C.muted2,
+              background: C.surf3,
+              color: C.textDim,
               fontWeight: 700,
               fontSize: 11,
               cursor: 'pointer',
+              fontFamily: 'inherit',
             }}
           >
             {TT(lang, 'مسح', 'Clear')}

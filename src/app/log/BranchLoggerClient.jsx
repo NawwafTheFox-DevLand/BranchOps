@@ -8,11 +8,15 @@ const C = {
   bg:'#f4f6f9', surf:'#ffffff', surf2:'#f0f2f6', surf3:'#e8ebf0',
   border:'#dde1e9', border2:'#c8cdd8',
   amber:'#d97706', amberDim:'rgba(217,119,6,0.08)', amberBrd:'rgba(217,119,6,0.25)',
+  amberBorder:'rgba(217,119,6,0.25)',
   green:'#16a34a', greenDim:'rgba(22,163,74,0.07)', greenBrd:'rgba(22,163,74,0.2)',
+  greenBorder:'rgba(22,163,74,0.2)',
   red:'#dc2626',   redDim:'rgba(220,38,38,0.07)',   redBrd:'rgba(220,38,38,0.2)',
+  redBorder:'rgba(220,38,38,0.2)',
   blue:'#2563eb',  blueDim:'rgba(37,99,235,0.07)',  blueBrd:'rgba(37,99,235,0.2)',
   teal:'#0d9488',  violet:'#7c3aed',
   muted:'#94a3b8', muted2:'#64748b', text:'#111827', textDim:'#374151',
+  surface: '#ffffff', surfaceHigh: '#f0f2f6',
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -40,10 +44,10 @@ const TABS = [
 const Field = ({ label, labelAr, error, children }) => (
   <div style={{ marginBottom: 14 }}>
     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5 }}>
-      <label style={{ fontSize: 11, color: C.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+      <label style={{ fontSize: 11, color: C.muted2, letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600 }}>
         {label}
       </label>
-      {labelAr && <span style={{ fontSize: 11, color: C.muted, direction: 'rtl' }}>{labelAr}</span>}
+      {labelAr && <span style={{ fontSize: 11, color: C.muted2, direction: 'rtl' }}>{labelAr}</span>}
     </div>
     {children}
     {error && <div style={{ fontSize: 10, color: C.red, marginTop: 3 }}>{error}</div>}
@@ -52,16 +56,17 @@ const Field = ({ label, labelAr, error, children }) => (
 
 const inputStyle = (hasError, disabled) => ({
   width: '100%',
-  background: disabled ? '#121212' : C.surfaceHigh,
+  background: disabled ? C.surf3 : C.surfaceHigh,
   border: `1px solid ${hasError ? C.redBorder : C.border2}`,
   borderRadius: 8,
   padding: '11px 13px',
   fontSize: 14,
-  color: disabled ? 'rgba(229,231,235,0.5)' : C.text,
+  color: disabled ? C.muted2 : C.text,
   outline: 'none',
   appearance: 'none',
   boxSizing: 'border-box',
   WebkitAppearance: 'none',
+  cursor: disabled ? 'not-allowed' : 'auto',
 })
 
 const Select = ({ value, onChange, options, placeholder, error, disabled }) => (
@@ -85,7 +90,7 @@ const Select = ({ value, onChange, options, placeholder, error, disabled }) => (
         right: 12,
         top: '50%',
         transform: 'translateY(-50%)',
-        color: C.muted,
+        color: C.muted2,
         pointerEvents: 'none',
         fontSize: 10,
       }}
@@ -130,7 +135,7 @@ const Toast = ({ toast }) => {
         zIndex: 999,
         maxWidth: '90vw',
         textAlign: 'center',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
         animation: 'slideUp .25s ease',
       }}
     >
@@ -227,7 +232,7 @@ function TodaySummary({ todayStartISO, branchFilter }) {
           <div
             style={{
               fontSize: 9,
-              color: C.muted,
+              color: C.muted2,
               marginTop: 3,
               letterSpacing: '0.06em',
               textTransform: 'uppercase',
@@ -235,7 +240,7 @@ function TodaySummary({ todayStartISO, branchFilter }) {
           >
             {s.label}
           </div>
-          <div style={{ fontSize: 9, color: C.muted, direction: 'rtl' }}>{s.labelAr}</div>
+          <div style={{ fontSize: 9, color: C.muted2, direction: 'rtl' }}>{s.labelAr}</div>
         </div>
       ))}
     </div>
@@ -818,17 +823,17 @@ export default function BranchLoggerClient({ initial, profile, user }) {
     >
       <style>{`
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        input, select, textarea { color: #e5e7eb; font-family: inherit; }
+        input, select, textarea { color: #111827; font-family: inherit; }
         input:focus, select:focus, textarea:focus {
-          outline: none; border-color: rgba(245,158,11,0.5) !important;
-          box-shadow: 0 0 0 2px rgba(245,158,11,0.1);
+          outline: none; border-color: rgba(217,119,6,0.5) !important;
+          box-shadow: 0 0 0 2px rgba(217,119,6,0.08);
         }
-        select option { background: #1a1a1a; }
+        select option { background: #ffffff; color: #111827; }
         @keyframes slideUp { from{opacity:0;transform:translate(-50%,12px)} to{opacity:1;transform:translate(-50%,0)} }
         @keyframes fadeIn  { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
         .fade-in { animation: fadeIn .25s ease; }
         ::-webkit-scrollbar { width: 3px; }
-        ::-webkit-scrollbar-thumb { background: #222; border-radius: 2px; }
+        ::-webkit-scrollbar-thumb { background: #c8cdd8; border-radius: 2px; }
       `}</style>
 
       {/* Header */}
@@ -847,7 +852,7 @@ export default function BranchLoggerClient({ initial, profile, user }) {
             <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 17, letterSpacing: '-0.02em' }}>
               Branch Log
             </div>
-            <div style={{ fontSize: 10, color: C.muted, marginTop: 1 }}>
+            <div style={{ fontSize: 10, color: C.muted2, marginTop: 1 }}>
               {new Date().toLocaleDateString('en-SA', { weekday: 'long', day: 'numeric', month: 'short' })}
             </div>
           </div>
@@ -885,7 +890,7 @@ export default function BranchLoggerClient({ initial, profile, user }) {
                   fontSize: 10,
                   fontWeight: 600,
                   marginTop: 2,
-                  color: tab === t.id ? C.amber : C.muted,
+                  color: tab === t.id ? C.amber : C.muted2,
                   letterSpacing: '0.04em',
                 }}
               >

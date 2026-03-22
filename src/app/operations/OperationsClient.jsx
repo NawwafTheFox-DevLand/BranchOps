@@ -99,11 +99,11 @@ export default function OperationsClient({ branches, products, slots, userRole, 
     <div style={{ minHeight:'100vh', background:C.bg, fontFamily:"'Inter','Segoe UI',system-ui,sans-serif", color:C.text }}>
       <style>{`
         *{box-sizing:border-box;margin:0;padding:0}
-        select,input{font-family:inherit;color:#e5e7eb}
-        select option{background:#14171b}
+        select,input{font-family:inherit;color:#111827}
+        select option{background:#ffffff;color:#111827}
         @keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
         .fu{animation:fu .25s ease both}
-        ::-webkit-scrollbar{width:3px} ::-webkit-scrollbar-thumb{background:#252c33;border-radius:2px}
+        ::-webkit-scrollbar{width:3px} ::-webkit-scrollbar-thumb{background:#c8cdd8;border-radius:2px}
       `}</style>
 
       {/* Header */}

@@ -27,7 +27,7 @@ function Btn({ onClick, disabled, loading, color=C.amber, children }) {
     <button onClick={onClick} disabled={disabled} style={{
       marginTop:12, width:'100%', padding:'11px', borderRadius:10, border:'none',
       fontWeight:800, fontSize:13, cursor:disabled?'not-allowed':'pointer',
-      background:disabled?'#1a1a1a':color, color:disabled?'#555':'#0a0a0a',
+      background:disabled?C.surf3:color, color:disabled?C.muted2:'#0a0a0a',
       fontFamily:"'Syne',sans-serif", opacity:disabled?0.6:1,
     }}>{loading ? '⏳ جارٍ الاستيراد…' : children}</button>
   )

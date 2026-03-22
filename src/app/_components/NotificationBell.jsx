@@ -85,10 +85,10 @@ export default function NotificationBell() {
     <div ref={ref} style={{ position: 'relative' }}>
       <button
         onClick={() => setOpen(o => !o)}
-        style={{ position: 'relative', background: 'rgba(0,0,0,0.3)',
-          border: `1px solid ${open ? 'rgba(245,158,11,0.4)' : 'rgba(255,255,255,0.12)'}`,
+        style={{ position: 'relative', background: open ? C.amberDim : '#f0f2f6',
+          border: `1px solid ${open ? C.amberBrd : '#c8cdd8'}`,
           borderRadius: 9, padding: '7px 10px', cursor: 'pointer',
-          color: open ? C.amber : 'rgba(229,231,235,0.85)', fontSize: 15,
+          color: open ? C.amber : '#374151', fontSize: 15,
           display: 'flex', alignItems: 'center', gap: 5 }}>
         🔔
         {unread > 0 && (
@@ -105,7 +105,7 @@ export default function NotificationBell() {
       {open && (
         <div style={{ position: 'absolute', top: 44, right: 0, width: 360,
           background: C.surf, border: `1px solid ${C.border2}`,
-          borderRadius: 14, boxShadow: '0 20px 60px rgba(0,0,0,0.6)',
+          borderRadius: 14, boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
           zIndex: 999, overflow: 'hidden', fontFamily: "'Inter','Segoe UI',system-ui,sans-serif" }}>
 
           <div style={{ padding: '12px 16px', borderBottom: `1px solid ${C.border}`,

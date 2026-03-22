@@ -244,7 +244,7 @@ export default function TransformClient() {
     <>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" />
       <div style={{ minHeight:'100vh', background:C.bg, fontFamily:"'Inter','Segoe UI',system-ui,sans-serif", color:C.text, padding:'28px 28px 80px' }}>
-        <style>{`*{box-sizing:border-box;margin:0;padding:0}@keyframes fu{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}.fu{animation:fu .25s ease both}@keyframes spin{to{transform:rotate(360deg)}}.spin{animation:spin .8s linear infinite;display:inline-block}.rh:hover{background:rgba(255,255,255,0.025)!important}::-webkit-scrollbar{width:3px;height:3px}::-webkit-scrollbar-thumb{background:#252d35;border-radius:2px}select option{background:#ffffff}`}</style>
+        <style>{`*{box-sizing:border-box;margin:0;padding:0}@keyframes fu{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}.fu{animation:fu .25s ease both}@keyframes spin{to{transform:rotate(360deg)}}.spin{animation:spin .8s linear infinite;display:inline-block}.rh:hover{background:rgba(0,0,0,0.025)!important}::-webkit-scrollbar{width:3px;height:3px}::-webkit-scrollbar-thumb{background:#c8cdd8;border-radius:2px}select option{background:#ffffff;color:#111827}`}</style>
 
         <div style={{ maxWidth:960, margin:'0 auto' }}>
           <div style={{ marginBottom:24 }}>

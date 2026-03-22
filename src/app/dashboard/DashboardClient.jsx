@@ -91,7 +91,7 @@ export default function DashboardClient({ initial }) {
 
   return (
     <div style={{ minHeight:'100vh', background:C.bg, fontFamily:"'Inter','Segoe UI',system-ui,sans-serif", color:C.text, paddingBottom:60 }} dir={lang==='ar'?'rtl':'ltr'}>
-      <style>{`*{box-sizing:border-box;margin:0;padding:0}.rh:hover{background:rgba(255,255,255,0.02)!important}@keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}.fu{animation:fu .3s ease both}::-webkit-scrollbar{width:3px;height:3px}::-webkit-scrollbar-thumb{background:#252d35;border-radius:2px}`}</style>
+      <style>{`*{box-sizing:border-box;margin:0;padding:0}.rh:hover{background:rgba(0,0,0,0.025)!important}@keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}.fu{animation:fu .3s ease both}::-webkit-scrollbar{width:3px;height:3px}::-webkit-scrollbar-thumb{background:#c8cdd8;border-radius:2px}select option{background:#ffffff;color:#111827}`}</style>
 
       <div style={{ padding:'12px 28px', borderBottom:`1px solid ${C.border}`, background:C.surf }}>
         <div style={{ fontSize:10, color:C.muted2 }}>{T('لوحة التشغيل اليومي','Daily Operations Dashboard')} · {today}</div>
