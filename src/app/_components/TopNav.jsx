@@ -103,12 +103,13 @@ export default function TopNav({ profile, currentPath='', children }) {
   const role      = profile?.role      || 'branch_user'
   const adminType = profile?.admin_type || null
   const items     = NAV.filter(i => i.roles.includes(role))
-  const [lang, setLang] = useState('ar')
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem('lang') || 'ar') : 'ar')
 
   const toggleLang = () => {
     const next = lang === 'ar' ? 'en' : 'ar'
     setLang(next)
-    typeof window !== 'undefined' && window.dispatchEvent(new CustomEvent('langchange', { detail: next }))
+    localStorage.setItem('lang', next)
+    window.dispatchEvent(new CustomEvent('langchange', { detail: next }))
   }
 
   const roleLabel =

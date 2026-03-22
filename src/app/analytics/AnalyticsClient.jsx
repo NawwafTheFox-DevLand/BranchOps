@@ -152,7 +152,7 @@ function Empty({ icon='📊', msg, sub, cta, href }) {
 }
 
 export default function AnalyticsClient({ initial }) {
-  const [lang, setLang] = useState('ar')
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem('lang') || 'ar') : 'ar')
   const [tab,  setTab]  = useState('overview')
   const [sortKey, setSortKey] = useState('total_sales_sar')
   const [tip, setTip] = useState(null)
@@ -247,7 +247,7 @@ export default function AnalyticsClient({ initial }) {
         </div>
         <div style={{ display:'flex', gap:10, alignItems:'center' }}>
           <a href="/dashboard" style={{ fontSize:11, color:C.muted2, textDecoration:'none' }}>← {T('الرئيسية','Dashboard')}</a>
-          <button onClick={() => setLang(l => l==='ar'?'en':'ar')} style={{ background:C.surf2, border:`1px solid ${C.border2}`, color:C.textDim, borderRadius:7, padding:'6px 12px', fontSize:11, fontWeight:700, cursor:'pointer', fontFamily:'inherit' }}>
+          <button onClick={() => { const n=lang==='ar'?'en':'ar'; setLang(n); localStorage.setItem('lang',n) }} style={{ background:C.surf2, border:`1px solid ${C.border2}`, color:C.textDim, borderRadius:7, padding:'6px 12px', fontSize:11, fontWeight:700, cursor:'pointer', fontFamily:'inherit' }}>
             {lang==='ar'?'EN':'عربي'}
           </button>
         </div>

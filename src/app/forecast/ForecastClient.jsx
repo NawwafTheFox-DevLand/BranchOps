@@ -93,7 +93,7 @@ const TABS = [
 ]
 
 export default function ForecastClient({ initial }) {
-  const [lang,       setLang]       = useState('ar')
+  const [lang,       setLang]       = useState(() => typeof window !== 'undefined' ? (localStorage.getItem('lang') || 'ar') : 'ar')
   const [tab,        setTab]        = useState('overview')
   const [date,       setDate]       = useState(initial.date)
   const [run,        setRun]        = useState(initial.run)
@@ -249,7 +249,7 @@ export default function ForecastClient({ initial }) {
         </div>
         <div style={{ display:'flex', gap:8, alignItems:'center' }}>
           {/* Lang toggle */}
-          <button onClick={()=>setLang(l=>l==='ar'?'en':'ar')} style={{ background:C.surf3, border:`1px solid ${C.border2}`, color:C.textDim, borderRadius:7, padding:'6px 11px', fontSize:11, fontWeight:700, cursor:'pointer', fontFamily:'inherit' }}>
+          <button onClick={()=>{ const n=lang==='ar'?'en':'ar'; setLang(n); localStorage.setItem('lang',n) }} style={{ background:C.surf3, border:`1px solid ${C.border2}`, color:C.textDim, borderRadius:7, padding:'6px 11px', fontSize:11, fontWeight:700, cursor:'pointer', fontFamily:'inherit' }}>
             {lang==='ar'?'EN':'عربي'}
           </button>
           <input type="date" value={date}

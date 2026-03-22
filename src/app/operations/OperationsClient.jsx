@@ -29,7 +29,7 @@ const TABS = [
 const Lbl = ({ ar, en, lang }) => <span>{lang === 'ar' ? ar : en}</span>
 
 export default function OperationsClient({ branches, products, slots, userRole, userBranchId }) {
-  const [lang,    setLang]    = useState('ar')
+  const [lang,    setLang]    = useState(() => typeof window !== 'undefined' ? (localStorage.getItem('lang') || 'ar') : 'ar')
   const [tab,     setTab]     = useState('batch')
   const [loading, setLoading] = useState(false)
   const [msg,     setMsg]     = useState(null)
@@ -124,7 +124,7 @@ export default function OperationsClient({ branches, products, slots, userRole, 
             </div>
           )}
           {/* Lang toggle */}
-          <button onClick={() => setLang(l => l==='ar'?'en':'ar')} style={{ background:C.surf2, border:`1px solid ${C.border2}`, color:C.textDim, borderRadius:7, padding:'6px 12px', fontSize:11, fontWeight:700, cursor:'pointer', fontFamily:'inherit' }}>
+          <button onClick={() => { const n=lang==='ar'?'en':'ar'; setLang(n); localStorage.setItem('lang',n) }} style={{ background:C.surf2, border:`1px solid ${C.border2}`, color:C.textDim, borderRadius:7, padding:'6px 12px', fontSize:11, fontWeight:700, cursor:'pointer', fontFamily:'inherit' }}>
             {lang==='ar' ? 'EN' : 'عربي'}
           </button>
           <a href="/dashboard" style={{ fontSize:11, color:C.textDim, border:`1px solid ${C.border2}`, padding:'6px 10px', borderRadius:7, fontWeight:700, background:C.surf2 }}>

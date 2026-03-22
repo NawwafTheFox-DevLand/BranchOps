@@ -133,7 +133,7 @@ function MAPEBar({ mape, color }) {
 }
 
 export default function TrainingClient({ products, recentRuns, accuracyRows, batchCount, trainedModels = [] }) {
-  const [lang,        setLang]       = useState('ar')
+  const [lang,        setLang]       = useState(() => typeof window !== 'undefined' ? (localStorage.getItem('lang') || 'ar') : 'ar')
   const [selModel,    setSelModel]   = useState('wma')
   const [params,      setParams]     = useState(() => {
     const init = {}
@@ -240,7 +240,7 @@ export default function TrainingClient({ products, recentRuns, accuracyRows, bat
           </div>
         </div>
         <div style={{ display:'flex', gap:8 }}>
-          <button onClick={()=>setLang(l=>l==='ar'?'en':'ar')} style={{ background:C.surf3, border:`1px solid ${C.border2}`, color:C.textDim, borderRadius:7, padding:'6px 11px', fontSize:11, fontWeight:700, cursor:'pointer', fontFamily:'inherit' }}>
+          <button onClick={()=>{ const n=lang==='ar'?'en':'ar'; setLang(n); localStorage.setItem('lang',n) }} style={{ background:C.surf3, border:`1px solid ${C.border2}`, color:C.textDim, borderRadius:7, padding:'6px 11px', fontSize:11, fontWeight:700, cursor:'pointer', fontFamily:'inherit' }}>
             {lang==='ar'?'EN':'عربي'}
           </button>
           <a href="/forecast/weekly" style={{ background:C.amberDim, border:`1px solid ${C.amberBrd}`, color:C.amber, borderRadius:7, padding:'7px 12px', fontSize:11, fontWeight:700, textDecoration:'none' }}>

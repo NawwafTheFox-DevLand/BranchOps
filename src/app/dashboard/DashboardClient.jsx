@@ -48,11 +48,11 @@ const TABS = [
 ]
 
 export default function DashboardClient({ initial }) {
-  const [lang, setLang] = useState('ar')
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem('lang') || 'ar') : 'ar')
   const [tab,  setTab]  = useState('overview')
 
   useEffect(() => {
-    const h = (e) => setLang(e.detail)
+    const h = (e) => { setLang(e.detail); localStorage.setItem('lang', e.detail) }
     window.addEventListener('langchange', h)
     return () => window.removeEventListener('langchange', h)
   }, [])
