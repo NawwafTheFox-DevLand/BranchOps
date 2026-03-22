@@ -107,7 +107,7 @@ export default function OperationsClient({ branches, products, slots, userRole, 
       `}</style>
 
       {/* Header */}
-      <div style={{ borderBottom:`1px solid ${C.border}`, padding:'14px 28px', background:'rgba(7,8,10,0.97)', position:'sticky', top:0, zIndex:50, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+      <div style={{ borderBottom:`1px solid ${C.border}`, padding:'14px 28px', background:C.surf, position:'sticky', top:0, zIndex:50, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
         <div>
           <div style={{ fontFamily:"'Syne',sans-serif", fontWeight:900, fontSize:18, letterSpacing:'-0.03em' }}>
             {lang==='ar' ? 'العمليات اليومية' : 'Daily Operations'}
@@ -369,8 +369,8 @@ function SubmitBtn({ loading, lang, disabled, onClick, color='#f59e0b' }) {
       disabled={disabled || loading}
       style={{
         marginTop:20, width:'100%', padding:'13px', borderRadius:10, border:'none',
-        background: disabled || loading ? '#1a1e23' : color,
-        color: disabled || loading ? '#4b5563' : '#050608',
+        background: disabled || loading ? C.surf3 : color,
+        color: disabled || loading ? C.muted2 : '#050608',
         fontWeight:800, fontSize:14, cursor: disabled||loading ? 'not-allowed':'pointer',
         fontFamily:"'Syne',sans-serif", letterSpacing:'0.02em',
       }}
@@ -381,34 +381,35 @@ function SubmitBtn({ loading, lang, disabled, onClick, color='#f59e0b' }) {
 }
 
 function LogTable({ title, desc, rows, cols }) {
+  const C2 = { surf:'#ffffff', surf2:'#f0f2f6', border:'#dde1e9', text:'#111827', muted2:'#64748b', muted:'#94a3b8' }
   if (!rows.length) return (
-    <div style={{ background:'#0f1114', border:'1px solid #1f2429', borderRadius:12, padding:'20px', textAlign:'center', color:'#4b5563', fontSize:12 }}>
+    <div style={{ background:C2.surf, border:`1px solid ${C2.border}`, borderRadius:12, padding:'20px', textAlign:'center', color:C2.muted2, fontSize:12 }}>
       {title} — No data yet
     </div>
   )
   return (
-    <div style={{ background:'#0f1114', border:'1px solid #1f2429', borderRadius:12, overflow:'hidden' }}>
-      <div style={{ padding:'12px 16px', borderBottom:'1px solid #1f2429' }}>
-        <div style={{ fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13 }}>{title}</div>
-        <div style={{ fontSize:10, color:'#6b7280', marginTop:2 }}>{desc}</div>
+    <div style={{ background:C2.surf, border:`1px solid ${C2.border}`, borderRadius:12, overflow:'hidden' }}>
+      <div style={{ padding:'12px 16px', borderBottom:`1px solid ${C2.border}` }}>
+        <div style={{ fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, color:C2.text }}>{title}</div>
+        <div style={{ fontSize:10, color:C2.muted2, marginTop:2 }}>{desc}</div>
       </div>
       <div style={{ overflowX:'auto' }}>
         <table style={{ width:'100%', borderCollapse:'collapse', fontSize:11 }}>
           <thead>
-            <tr style={{ borderBottom:'1px solid #1f2429' }}>
+            <tr style={{ borderBottom:`1px solid ${C2.border}`, background:C2.surf2 }}>
               {cols.map((c,i) => (
-                <th key={i} style={{ padding:'7px 10px', textAlign: c.right ? 'right':'left', color:'#6b7280', fontSize:9, letterSpacing:'0.08em', textTransform:'uppercase' }}>{c.label}</th>
+                <th key={i} style={{ padding:'7px 10px', textAlign: c.right ? 'right':'left', color:C2.muted2, fontSize:9, letterSpacing:'0.08em', textTransform:'uppercase' }}>{c.label}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {rows.map((r,i) => (
-              <tr key={i} style={{ borderBottom:'1px solid #1f2429' }}>
+              <tr key={i} style={{ borderBottom:`1px solid ${C2.border}` }}>
                 {cols.map((c,j) => (
                   <td key={j} style={{
                     padding:'7px 10px',
                     textAlign: c.right ? 'right' : 'left',
-                    color: c.color || (c.dimmed ? '#6b7280' : '#e5e7eb'),
+                    color: c.color || (c.dimmed ? C2.muted2 : C2.text),
                     maxWidth: c.truncate ? 100 : undefined,
                     overflow: c.truncate ? 'hidden' : undefined,
                     textOverflow: c.truncate ? 'ellipsis' : undefined,

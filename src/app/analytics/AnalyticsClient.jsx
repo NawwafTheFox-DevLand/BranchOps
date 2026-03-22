@@ -236,7 +236,7 @@ export default function AnalyticsClient({ initial }) {
       )}
 
       {/* Header */}
-      <div style={{ borderBottom:`1px solid ${C.border}`, padding:'16px 28px', display:'flex', alignItems:'center', justifyContent:'space-between', background:'rgba(7,8,10,0.97)', position:'sticky', top:0, zIndex:40 }}>
+      <div style={{ borderBottom:`1px solid ${C.border}`, padding:'16px 28px', display:'flex', alignItems:'center', justifyContent:'space-between', background:C.surf, position:'sticky', top:0, zIndex:40 }}>
         <div>
           <div style={{ fontFamily:"'Syne',sans-serif", fontWeight:900, fontSize:20, letterSpacing:'-0.04em' }}>
             Branch Ops <span style={{ color:C.amber }}>Analytics</span>

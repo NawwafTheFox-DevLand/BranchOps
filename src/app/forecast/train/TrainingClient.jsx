@@ -230,7 +230,7 @@ export default function TrainingClient({ products, recentRuns, accuracyRows, bat
       `}</style>
 
       {/* Header */}
-      <div style={{ borderBottom:`1px solid ${C.border}`, padding:'14px 28px', display:'flex', justifyContent:'space-between', alignItems:'center', background:'rgba(7,8,9,0.97)', position:'sticky', top:0, zIndex:50 }}>
+      <div style={{ borderBottom:`1px solid ${C.border}`, padding:'14px 28px', display:'flex', justifyContent:'space-between', alignItems:'center', background:C.surf, position:'sticky', top:0, zIndex:50 }}>
         <div>
           <div style={{ fontFamily:"'Syne',sans-serif", fontWeight:900, fontSize:18, letterSpacing:'-0.03em' }}>
             ⚙ {T('ضبط وتدريب نموذج التنبؤ','Forecast Model Training')}

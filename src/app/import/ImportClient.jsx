@@ -115,7 +115,7 @@ export default function ImportClient() {
               style={{ width:'100%', fontSize:11, color:C.muted, marginBottom:8 }}/>
             <div style={{ fontSize:10, color:C.muted, marginBottom:4 }}>تسمية الفترة (مثل: Jan 2026)</div>
             <input value={period} onChange={e => setPeriod(e.target.value)} placeholder="Jan 2026"
-              style={{ width:'100%', padding:'8px 12px', borderRadius:8, border:`1px solid ${C.border2}`, background:'#0a0a0a', color:C.text, fontSize:12, fontFamily:'inherit' }}/>
+              style={{ width:'100%', padding:'8px 12px', borderRadius:8, border:`1px solid ${C.border2}`, background:C.surf3, color:C.text, fontSize:12, fontFamily:'inherit' }}/>
             <Btn onClick={() => run('sales_summary', '/api/import/sales-summary')}
               disabled={!files.sales_summary || !period || !!loading}
               loading={loading==='sales_summary'} color={C.amber}>
@@ -131,7 +131,7 @@ export default function ImportClient() {
               style={{ width:'100%', fontSize:11, color:C.muted, marginBottom:8 }}/>
             <div style={{ fontSize:10, color:C.muted, marginBottom:4 }}>تسمية الفترة</div>
             <input value={period} onChange={e => setPeriod(e.target.value)} placeholder="Jan 2026"
-              style={{ width:'100%', padding:'8px 12px', borderRadius:8, border:`1px solid ${C.border2}`, background:'#0a0a0a', color:C.text, fontSize:12, fontFamily:'inherit' }}/>
+              style={{ width:'100%', padding:'8px 12px', borderRadius:8, border:`1px solid ${C.border2}`, background:C.surf3, color:C.text, fontSize:12, fontFamily:'inherit' }}/>
             <Btn onClick={() => run('menu_analysis', '/api/import/menu-analysis')}
               disabled={!files.menu_analysis || !period || !!loading}
               loading={loading==='menu_analysis'} color={C.green}>

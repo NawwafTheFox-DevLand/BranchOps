@@ -382,7 +382,7 @@ export default function ChartsClient() {
       `}</style>
 
       {/* Header */}
-      <div style={{ borderBottom:`1px solid ${C.border}`, padding:'16px 32px', display:'flex', alignItems:'center', justifyContent:'space-between', background:'rgba(7,8,10,0.97)', position:'sticky', top:0, zIndex:50 }}>
+      <div style={{ borderBottom:`1px solid ${C.border}`, padding:'16px 32px', display:'flex', alignItems:'center', justifyContent:'space-between', background:C.surf, position:'sticky', top:0, zIndex:50 }}>
         <div>
           <div style={{ fontFamily:"'Syne',sans-serif", fontWeight:900, fontSize:20, letterSpacing:'-0.04em' }}>Analytics</div>
           <div style={{ fontSize:10, color:C.muted2, marginTop:1 }}>3-year performance · {monthly.length} months of data</div>
